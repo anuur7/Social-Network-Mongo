@@ -10,7 +10,7 @@ const userController = {
         })
         .catch((err) => {
             console.log(`ERROR: Failed to get all users | ${err.message}`);
-            res.status(500).json({err: 'Failed to get all users'});
+            res.status(500).json(err);
         })
     }, 
 
@@ -27,7 +27,7 @@ const userController = {
         })
         .catch((err) => {
             console.log(`ERROR: Failed to get one user | ${err.message}`);
-            res.status(500).json({err: 'Failed to get one user'});
+            res.status(500).json(err);
         })
     },
 
@@ -53,7 +53,7 @@ const userController = {
         })
         .catch((err) => {
             console.log(`ERROR: Failed to delete user | ${err.message}`);
-            res.status(500).json({err: 'Failed to delete user'});
+            res.status(500).json(err);
         })
     },
 
@@ -68,7 +68,7 @@ const userController = {
         })
         .catch((err) => {
             console.log(`ERROR: Failed to update user | ${err.message}`);
-            res.status(500).json({err: 'Failed to update user'});
+            res.status(500).json(err);
         })
     }
 }
