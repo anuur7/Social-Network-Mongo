@@ -4,7 +4,8 @@ const {
   getAllThoughts,
   getThoughtById,
   createNewThought,
-  deleteThought
+  deleteThought,
+  updateThought
 } = require('../../controllers/thoughtController');
 
 // just get all the thoughts. Get & create
@@ -18,6 +19,7 @@ router
 .route('/:id')
 .get(getThoughtById)
 .delete(deleteThought)
+.put(updateThought)
 
 
 

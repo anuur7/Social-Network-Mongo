@@ -15,34 +15,32 @@ const userController = {
   },
 
   getOneUser(req, res) {
-    User.findOne({ _id: req.params.id })
+    User.findOne({ _id: req.params.userId })
       .select("-__v")
       .populate("friends")
       .populate("thoughts")
-      .then((oneUser) => {
-        if (!oneUser) {
-          return res
+      .then((oneUser) => 
+        !oneUser 
+          ? res
             .status(404)
-            .json({ message: "No user was found with this ID" });
-        }
-        res.json(oneUser);
-      })
+            .json({ message: "No user was found with this ID" })
+        : res.json(oneUser)
       .catch((err) => {
         console.log(`ERROR: Failed to get one user | ${err.message}`);
         res.status(500).json(err);
-      });
-  },
+      })
+      )},
 
   createUser(req, res) {
     User.create(req.body)
-      .then((user) => res.json({ message: "User has been created" }, user))
+      .then((user) => res.json({ message: "User has been created", user}))
       .catch((err) =>
         res.status(500).json({ message: "Failed to create user", err })
       );
   },
 
   deleteOneUser(req, res) {
-    User.findOneAndDelete({ _id: req.params.id })
+    User.findOneAndDelete({ _id: req.params.userId })
       .select("-__v")
       .then((deleteUser) => {
         if (!deleteUser) {
@@ -60,7 +58,7 @@ const userController = {
 
   updateOneUser(req, res) {
     User.findOneAndUpdate(
-      { _id: req.params.id },
+      { _id: req.params.userId },
       { $set: req.body },
       { runValidators: true, new: true }
     )

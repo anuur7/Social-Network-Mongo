@@ -12,7 +12,9 @@ const thoughtController = {
       .select("-__v")
       .then((thoughts) => {
         if (!thoughts) {
-          return res.status(404).json({ message: "No thought was found with this ID" });
+          return res
+            .status(404)
+            .json({ message: "No thought was found with this ID" });
         }
         res.json(thoughts);
       })
@@ -24,10 +26,14 @@ const thoughtController = {
 
   createNewThought(req, res) {
     Thought.create(req.body)
-      .then((thoughts) => res.json({message: "Created a new thought!", thoughts}))
+      .then((thoughts) =>
+        res.json({ message: "Created a new thought!", thoughts })
+      )
       .catch((err) => {
-        console.log((`ERROR: Failed to create a new thought! | ${err.message}`));
-        res.status(500).json({message:"Failed to create a new thought!", err});
+        console.log(`ERROR: Failed to create a new thought! | ${err.message}`);
+        res
+          .status(500)
+          .json({ message: "Failed to create a new thought!", err });
       });
   },
 
@@ -35,14 +41,36 @@ const thoughtController = {
     Thought.findOneAndDelete({ _id: req.params.id })
       .then((thoughts) => {
         if (!thoughts) {
-          return res.status(404).json({ message: "No thought was found with this ID" });
+          return res
+            .status(404)
+            .json({ message: "No thought was found with this ID" });
         }
-        res.json(thoughts);
+        res.json({ message: "Thought deleted", thoughts });
       })
       .catch((err) => {
         console.log(`ERROR: Failed to delete thought! | ${err.message}`);
-        res.status(500).json({message:"Failed to delete thought!", err});
+        res.status(500).json({ message: "Failed to delete thought!", err });
+      });
+  },
+
+  updateThought(req, res) {
+    Thought.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: req.body },
+      { runValidators: true, new: true }
+    )
+      .then((thoughts) => {
+        if (!thoughts) {
+          return res
+            .status(404)
+            .json({ message: "No thought was found with this ID" });
+        }
+        res.json({ message: "Thought updated", thoughts });
       })
+      .catch((err) => {
+        console.log(`ERROR: Failed to update thought! | ${err.message}`);
+        res.status(500).json({ message: "Failed to update thought!", err });
+      });
   },
 };
 
