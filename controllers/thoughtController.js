@@ -24,7 +24,7 @@ const thoughtController = {
       });
   },
 
-  createNewThought(req, res) {
+  createThought(req, res) {
     Thought.create(req.body)
       .then((thoughts) =>
         res.json({ message: "Created a new thought!", thoughts })
@@ -70,6 +70,44 @@ const thoughtController = {
       .catch((err) => {
         console.log(`ERROR: Failed to update thought! | ${err.message}`);
         res.status(500).json({ message: "Failed to update thought!", err });
+      });
+  },
+
+  createReaction(req, res) {
+    Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $push: { reactions: req.body } },
+      { runValidators: true, new: true }
+    )
+      .then((newReaction) => {
+        if (!newReaction) {
+          res.status(404).json({ message: "No thought found with that ID!" });
+          return;
+        }
+        res.json({ message: "Reacted to thought!", newReaction });
+      })
+      .catch((err) => {
+        console.log(`ERROR: Failed to react to thought! | ${err.message}`);
+        res
+          .status(500)
+          .json({ message: "Failed to react to thought!", err });
+      });
+  },
+
+  deleteReaction(req, res) {
+    Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $pull: { reactions: { reactionId: req.params.reactionId } } },
+      { new: true }
+    )
+      .then((reactionDeleted) => {
+        res.json({message: "Reaction deleted!", reactionDeleted});
+      })
+      .catch((err) => {
+        console.log(`ERROR: Failed to delete reaction! | ${err.message}`);
+        res
+          .status(500)
+          .json({ message: "Failed to delete reaction!", err });
       });
   },
 };

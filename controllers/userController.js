@@ -18,14 +18,18 @@ const userController = {
       .select("-__v")
       .populate("friends")
       .populate("thoughts")
-      .then((oneUser) =>
-        !oneUser
-          ? res.status(404).json({ message: "No user was found with this ID" })
-          : res.json(oneUser).catch((err) => {
-              console.log(`ERROR: Failed to get one user | ${err.message}`);
-              res.status(500).json(err);
-            })
-      );
+      .then((oneUser) => {
+        if (!oneUser) {
+          return res
+            .status(404)
+            .json({ message: "No user was found with this ID" });
+        }
+        res.json({ message: `User has been found` });
+      })
+      .catch((err) => {
+        console.log(`ERROR: Failed to get one user | ${err.message}`);
+        res.status(500).json({ message: "Failed to get one user", err });
+      });
   },
 
   createUser(req, res) {
