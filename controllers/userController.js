@@ -1,4 +1,3 @@
-// const { ObjectId } = require('mongoose').Types;
 const { User, Thought } = require("../models");
 
 const userController = {
@@ -19,21 +18,19 @@ const userController = {
       .select("-__v")
       .populate("friends")
       .populate("thoughts")
-      .then((oneUser) => 
-        !oneUser 
-          ? res
-            .status(404)
-            .json({ message: "No user was found with this ID" })
-        : res.json(oneUser)
-      .catch((err) => {
-        console.log(`ERROR: Failed to get one user | ${err.message}`);
-        res.status(500).json(err);
-      })
-      )},
+      .then((oneUser) =>
+        !oneUser
+          ? res.status(404).json({ message: "No user was found with this ID" })
+          : res.json(oneUser).catch((err) => {
+              console.log(`ERROR: Failed to get one user | ${err.message}`);
+              res.status(500).json(err);
+            })
+      );
+  },
 
   createUser(req, res) {
     User.create(req.body)
-      .then((user) => res.json({ message: "User has been created", user}))
+      .then((user) => res.json({ message: "User has been created", user }))
       .catch((err) =>
         res.status(500).json({ message: "Failed to create user", err })
       );
@@ -52,7 +49,7 @@ const userController = {
       })
       .catch((err) => {
         console.log(`ERROR: Failed to delete user | ${err.message}`);
-        res.status(500).json(err);
+        res.status(500).json({ message: "Failed to delete user", err });
       });
   },
 
@@ -73,7 +70,50 @@ const userController = {
       })
       .catch((err) => {
         console.log(`ERROR: Failed to update user | ${err.message}`);
-        res.status(500).json(err);
+        res.status(500).json({ message: "Failed to update user", err });
+      });
+  },
+
+  newFriend(req, res) {
+    User.findByIdAndUpdate(
+        { _id: req.params.userId },
+        { $addToSet: { friends: req.params.friendId } },
+        { new: true }
+    )
+      .select("-__v")
+      .then((friend) => {
+        if (!friend) {
+          res
+            .status(404)
+            .json({ message: "No such friend exists with that ID!" });
+          return;
+        }
+
+        res.json({ message: "Failed to add new friend!", friend });
+      })
+      .catch((err) => {
+        res.status(500).json({ message: "Failed to create new friend!", err });
+      });
+  },
+
+  deleteFriend(req, res) {
+    User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $pull: { friends: req.params.friendId } },
+      { runValidators: true, new: true }
+    )
+    .then((friendDeleted) => {
+        if (!friendDeleted) {
+          res
+            .status(404)
+            .json({ message: "No such friend exists with that ID!" });
+          return;
+        }
+
+        res.json({ message: "Failed to delete friend!", friendDeleted });
+      })
+      .catch((err) => {
+        res.status(500).json({ message: "Failed to delete friend!", err });
       });
   },
 };
