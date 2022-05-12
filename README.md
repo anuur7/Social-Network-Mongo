@@ -27,6 +27,11 @@ https://drive.google.com/file/d/18uaDVy9JbE1judGyuaO58hlYFIt0ZXCN/view?usp=shari
 ### Push Thoughts to Users
 https://drive.google.com/file/d/1GklvuiGL1ShJc79mySXwKOY6ZU4NDNTO/view?usp=sharing
 
+### Post & Delete New Friends
+https://drive.google.com/file/d/1nubtcJ0JGfD4QkFwnx9_M6FD-Q_mnOzA/view?usp=sharing
+
+
+
 
 
 
