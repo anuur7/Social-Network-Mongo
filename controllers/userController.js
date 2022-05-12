@@ -79,7 +79,7 @@ const userController = {
   },
 
   newFriend(req, res) {
-    User.findByIdAndUpdate(
+    User.findOneAndUpdate(
         { _id: req.params.userId },
         { $addToSet: { friends: req.params.friendId } },
         { new: true }
@@ -93,10 +93,10 @@ const userController = {
           return;
         }
 
-        res.json({ message: "Failed to add new friend!", friend });
+        res.json({ message: "Friend has been added!", friend });
       })
       .catch((err) => {
-        res.status(500).json({ message: "Failed to create new friend!", err });
+        res.status(500).json({ message: "Failed to add new friend!", err });
       });
   },
 
@@ -114,7 +114,7 @@ const userController = {
           return;
         }
 
-        res.json({ message: "Failed to delete friend!", friendDeleted });
+        res.json({ message: "Friend has been deleted!", friendDeleted });
       })
       .catch((err) => {
         res.status(500).json({ message: "Failed to delete friend!", err });
